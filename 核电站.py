@@ -92,7 +92,7 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.title('太阳能电池板')
         self.attributes('-fullscreen', True)
-        self.attributes('-topmost', True) #负责全屏和置顶窗口
+        self.attributes('-topmost', True)#负责全屏和置顶窗口
         self.protocol('WM_DELETE_WINDOW', lambda: None) # 让用户无法关闭这个窗口
 
         self.__set_components() #放置一位闪耀的太阳！
