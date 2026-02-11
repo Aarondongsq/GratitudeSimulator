@@ -26,12 +26,14 @@ import tkinter.messagebox as msgbox
 import sys
 from os.path import abspath, join#Python自带模块
 
-from PIL import Image, ImageTk #第三方库
+from PIL import Image, ImageTk 
+from pygame.mixer import music, init#第三方库
 
 def resource_path(relative_path:str) -> str:
     '''
     获取文件的绝对路径。
-    针对VS调试器的坏脾气，会有检查函数，确认自己是否在VS的调试模式。
+    可以根据源代码运行和打包版，自动切换获取模式。
+    路径兼容各大系统，防止你见不到将军！゜゜(´Ｏ`) ゜゜
     '''
 
     # ↓拆分文件路径，再重新组合，确保每个系统都能用该软件晒到太阳
@@ -45,6 +47,12 @@ def resource_path(relative_path:str) -> str:
 
     return join(base_path, relative_path)
 #==================== 类定义 ====================
+class OppsSunFalls(Exception):
+    '''
+    如果因为意外导致将军驾崩了，那么将会这样报错
+    '''
+    pass
+
 class MainWindow(tk.Tk):
     def __init__(self):
         '''
@@ -65,16 +73,28 @@ class MainWindow(tk.Tk):
         负责创建一个非常新鲜的太阳，不过运行它的人记得带上墨镜！
         否则，你将变成光！
         '''
-        pass
+        # --- 获取太阳 ---
+        self.image = self.__get_image() #有请太阳登场！
 
-    def __get_image(self, get_path:str) -> ImageTk.PhotoImage:
+        # --- 给太阳定个位置 ---
+        thesunrises = tk.Label(self, image=self.image)
+        #↓剧中太阳位置
+        thesunrises.pack(anchor='center', expand=True)
+
+    def __get_image(self) -> ImageTk.PhotoImage:
         '''
-        核心出装：太阳、太阳专属BGM导入
+        核心出装：太阳导入
         视听双结合，那才叫爽！
-
-        get_path：指定文件路径。
         '''
-        pass
+        try: #获取太阳
+            image_data = Image.open(resource_path(r'image\sun.png')) #获取太阳居住地
+            return ImageTk.PhotoImage(image_data)
+        except:
+            '''
+            如果特殊原因导致太阳升不起来，那么直接报错
+            提示用户应该检查太阳状态
+            '''
+            raise OppsSunFalls('哎呀！太阳升不起来了啊！太糟糕了！')
 
 if __name__ == '__main__':
     app = MainWindow()
