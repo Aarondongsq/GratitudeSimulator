@@ -22,9 +22,11 @@
     3. 任何违反 GPL v3 协议的行为，作者保留在开源社区公示及追究法律责任的权利。
 '''
 import tkinter as tk
-import tkinter.messagebox as msgbox 
+
 import sys
-from os.path import abspath, join#Python自带模块
+from os.path import abspath, join
+from threading import Thread
+from time import sleep#Python自带模块
 
 from PIL import Image, ImageTk 
 from pygame.mixer import music, init#第三方库
@@ -53,6 +55,33 @@ class OppsSunFalls(Exception):
     '''
     pass
 
+class MusicBegins:
+    def __init__(self):
+        '''
+        当太阳坐稳扶好时，将会播放专属音乐
+        让你感受将军的“恩情”！
+
+        将军的恩情还不完！！。゜゜(´Ｏ`) ゜゜。
+        '''
+        # --- 加载线程 ---
+        music_play = Thread(target=self.__execute, daemon=True) #启动播放线程防恩情卡死
+        music_play.start()
+
+    def __execute(self):
+        '''
+        播放恩情小曲，让周围的温度更快提高！
+        '''
+        # --- 恩情加载 ---
+        init() #初始化
+        music.load(resource_path(r'music\你若三冬.mp3'))
+
+        # --- 播放恩情 ---
+        while True:
+            music.play()
+            sleep(193) #播放时等待，防止过快停止
+            music.stop()
+
+
 class MainWindow(tk.Tk):
     def __init__(self):
         '''
@@ -67,6 +96,10 @@ class MainWindow(tk.Tk):
         self.protocol('WM_DELETE_WINDOW', lambda: None) # 让用户无法关闭这个窗口
 
         self.__set_components() #放置一位闪耀的太阳！
+        sleep(3)
+        self.lift()
+        #↓太阳专属音乐
+        MusicBegins()
 
     def __set_components(self):
         '''
