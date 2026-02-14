@@ -26,10 +26,10 @@ import tkinter as tk
 import sys
 from os.path import abspath, join
 from threading import Thread
-from time import sleep#Python自带模块
+from time import sleep  #Python自带模块
 
 from PIL import Image, ImageTk 
-from pygame.mixer import music, init#第三方库
+from pygame.mixer import music, init  #第三方库
 
 def resource_path(relative_path:str) -> str:
     '''
@@ -96,10 +96,11 @@ class MainWindow(tk.Tk):
         self.protocol('WM_DELETE_WINDOW', lambda: None) # 让用户无法关闭这个窗口
 
         self.__set_components() #放置一位闪耀的太阳！
-        sleep(3)
-        self.lift()
-        #↓太阳专属音乐
-        MusicBegins()
+        MusicBegins() #太阳专属音乐
+
+        #↓ 检查用户是否还完恩情的监督者
+        supervision = Thread(target=self.__topmost, daemon=True)
+        supervision.start()
 
     def __set_components(self):
         '''
@@ -113,6 +114,24 @@ class MainWindow(tk.Tk):
         thesunrises = tk.Label(self, image=self.image)
         #↓剧中太阳位置
         thesunrises.pack(anchor='center', expand=True)
+
+    def __topmost(self):
+        '''
+        将太阳置顶，确保用户恩情还完
+        如果用户恩情没还完还想关闭，那么会置顶
+        将军恩情没还完还想逃？
+        '''
+        while True: #每两秒执行一次
+            try:
+                self.deiconify() 
+                self.lift() #将窗口恢复初始置顶状态
+                sleep(2)
+            except Exception:
+                '''
+                若用户比太阳还要厉害，竟然把太阳切碎了
+                那么执行下面的错误处理
+                '''
+                pass
 
     def __get_image(self) -> ImageTk.PhotoImage:
         '''
