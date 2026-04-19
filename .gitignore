@@ -1,0 +1,9 @@
+﻿# 排除.vs拉的玩意
+.vs/
+
+# 排除Python及其他拉的玩意
+__pycache__/
+
+# 排除自己生成的东西
+change.diff
+log.log

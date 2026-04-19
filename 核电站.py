@@ -78,7 +78,10 @@ class MusicBegins:
         # --- 播放恩情 ---
         while True:
             music.play()
-            sleep(193) #播放时等待，防止过快停止
+            while music.get_busy():
+                # 每三秒检查一次音乐是否停止
+                # 防止用户通过加速工具浪费恩情
+                sleep(3)
             music.stop()
 
 
